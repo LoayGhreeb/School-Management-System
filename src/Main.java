@@ -162,7 +162,7 @@ public class Main {
             password = scanner.nextLine();
             student1 = student.login(username, password);
         }
-        System.out.printf("Congrats! You have been successfully logged in as an %s %s!%n", student1.getFirstName(), student1.getLastName());
+        System.out.printf("Congrats! You have been successfully logged in as %s %s!%n", student1.getFirstName(), student1.getLastName());
         studentOperation(student1);
     }
 

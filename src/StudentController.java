@@ -120,7 +120,7 @@ public class StudentController {
             // I want to display all courses with their ids , choose index , input student degree
             if (availableCourses.size() > 0) {
                 System.out.printf("All available courses are : %n");
-                Course selectedCourse = CourseController.selectCourse(availableCourses, student);
+                Course selectedCourse = CourseController.selectCourse(availableCourses, null);
 
                 if (selectedCourse == null)
                     response = 'n';
@@ -168,7 +168,6 @@ public class StudentController {
         availableCourses.removeAll(new ArrayList<>(student.getCourses().keySet()));
         return availableCourses;
     }
-
 
     public void deleteStudent() {
         Scanner scanner = new Scanner(System.in);
