@@ -63,11 +63,11 @@ public class StudentController {
             //read student data
             System.out.printf("To add new student : %n");
 
-            System.out.print("Enter username : ");
+            System.out.print("Enter username or -1 to cancel : ");
             userName= scanner.nextLine();
             while (!userName.equals("-1") && userNames.contains(userName.toLowerCase())){
                 System.out.print("Sorry this username is already taken! try again or -1 to cancel : ");
-                userName= scanner.next();
+                userName= scanner.nextLine();
             }
 
             if (userName.equals("-1")){
@@ -99,6 +99,7 @@ public class StudentController {
                 System.out.print("Do you want to add courses for this new student ? y or n : ");
                 char response = validResponse();
                 if (response == 'y') {
+                    System.out.println("---------------------------------------------------");
                     HashMap<Course, Double> studentCourses = registerNewCourse(newStudent, true);
                     newStudent.setCourses(studentCourses);
                 }
@@ -107,6 +108,7 @@ public class StudentController {
             }
             System.out.print("You want to add another student ? y or n : ");
             addStudent = validResponse();
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -127,7 +129,7 @@ public class StudentController {
                 else {
                     double degree = 0;
                     if (admin) {
-                        System.out.print("Please enter student degree in this course : ");
+                        System.out.print("Please enter student degree in this course or -1 to cancel : ");
                         degree = scanner.nextDouble();
                         while (degree != -1 && (degree < selectedCourse.getMinDegree() || degree > selectedCourse.getMaxDegree())) {
                             System.out.print("sorry, student degree must be in range [min degree, max degree] enter valid degree or -1 to cancel : ");
@@ -158,12 +160,12 @@ public class StudentController {
                 System.out.printf("you have added all available courses%n");
                 response = 'n';
             }
+            System.out.println("---------------------------------------------------");
         }
         return studentCourses;
     }
 
     public ArrayList<Course> getAvailableCourses(Student student){
-
         ArrayList<Course> availableCourses = new ArrayList<>(CourseController.getCourses());
         availableCourses.removeAll(new ArrayList<>(student.getCourses().keySet()));
         return availableCourses;
@@ -201,6 +203,7 @@ public class StudentController {
                 System.out.printf("you don't have any student!%n");
                 delete = 'n';
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -228,6 +231,7 @@ public class StudentController {
                                 "Please choose what you want to update : ");
 
                         int choice = validChoice(8);
+                        System.out.println("---------------------------------------------------");
                         // cancel
                         if (choice == 8) {
                             System.out.printf("task canceled!%n");
@@ -258,6 +262,7 @@ public class StudentController {
                             System.out.print("you want to update other data for the selected student ? y or n : ");
                             sameStudent = validResponse();
                         }
+                        System.out.println("---------------------------------------------------");
                     }
                     System.out.print("You want to update another student ? y or n : ");
                     modify = validResponse();
@@ -267,6 +272,7 @@ public class StudentController {
                 System.out.printf("you don't have any student!%n");
                 modify ='n';
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -290,7 +296,7 @@ public class StudentController {
     public void updateStudentUserName(Student student){
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter the new username : ");
+        System.out.print("Enter the new username or -1 to cancel : ");
         String newUserName = scanner.next();
 
         while (!newUserName.equals("-1") && userNames.contains(newUserName.toLowerCase())){
@@ -305,52 +311,78 @@ public class StudentController {
             userNames.remove(student.getUserName().toLowerCase());
             student.setUserName(newUserName);
             userNames.add(newUserName.toLowerCase());
-            System.out.printf("username updated%n");
+            System.out.printf("username updated to %s%n", newUserName);
         }
+        System.out.println("---------------------------------------------------");
     }
 
     public void updateStudentPassword(Student student){
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the new password : ");
+        System.out.print("Enter the new password or -1 to cancel : ");
         String newPassword = scanner.next();
-        student.setPassword(newPassword);
-        System.out.printf("password updated%n");
+        if (newPassword.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            student.setPassword(newPassword);
+            System.out.printf("password updated%n");
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateStudentFirstName(Student student) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the new first name : ");
+        System.out.print("Enter the new first name or -1 to cancel : ");
         String newFirstName = scanner.next();
-        student.setFirstName(newFirstName);
-        System.out.printf("first name updated%n");
+        if (newFirstName.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            student.setFirstName(newFirstName);
+            System.out.printf("first name updated to %s%n", newFirstName);
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateStudentLastName(Student student) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the new last name : ");
-        String input = scanner.next();
-        student.setLastName(input);
-        System.out.printf("last name updated%n");
+        System.out.print("Enter the new last name or -1 to cancel : ");
+        String newLastName = scanner.next();
+        if (newLastName.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            student.setLastName(newLastName);
+            System.out.printf("last name updated to %s%n", newLastName);
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     public void updateStudentPhone(Student student) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the new phone number : ");
-        String input = scanner.next();
-        student.setPhoneNumber(input);
-        System.out.printf("phone number updated%n");
+        System.out.print("Enter the new phone number or -1 to cancel : ");
+        String newPhoneNumber = scanner.next();
+        if (newPhoneNumber.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            student.setPhoneNumber(newPhoneNumber);
+            System.out.printf("phone number updated to %s%n", newPhoneNumber);
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateStudentAge(Student student) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the new age : ");
-        int input = scanner.nextInt();
-        while (input < 0) {
+        System.out.print("Enter the new age or -1 to cancel : ");
+        int newAge = scanner.nextInt();
+        while (newAge < -1) {
             System.out.print("age must be > 0 enter valid age : ");
-            input = scanner.nextInt();
+            newAge = scanner.nextInt();
         }
-        student.setAge(input);
-        System.out.printf("age updated%n");
+        if (newAge == -1)
+            System.out.printf("task canceled!%n");
+        else {
+            student.setAge(newAge);
+            System.out.printf("age updated to %d%n", newAge);
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateCourseDegree(Student student) {
@@ -365,7 +397,7 @@ public class StudentController {
                 if (selectedCourse == null)
                     response= 'n';
                 else {
-                    System.out.print("Enter new degree : ");
+                    System.out.print("Enter new degree or -1 to cancel : ");
                     double newDegree = scanner.nextDouble();
                     while (newDegree != -1 && newDegree < selectedCourse.getMinDegree() || newDegree > selectedCourse.getMaxDegree()) {
                         System.out.print("sorry, student degree must be in range [min degree, max degree] enter valid degree or -1 to cancel : ");
@@ -375,9 +407,9 @@ public class StudentController {
                         System.out.printf("task canceled!%n");
                     else {
                         student.setDegree(selectedCourse, newDegree);
-                        System.out.print("Student degree updated!");
+                        System.out.printf("Student degree updated to %.2f%n", newDegree);
                     }
-                    System.out.printf("%nDo you want to update degree for another course ? y or n : ");
+                    System.out.print("Do you want to update degree for another course ? y or n : ");
                     response = validResponse();
                 }
             }
@@ -385,6 +417,7 @@ public class StudentController {
                 System.out.printf("sorry there is no courses to update!%n");
                 response ='n';
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -397,6 +430,7 @@ public class StudentController {
             System.out.print("please enter valid index : ");
             index = scanner.nextInt();
         }
+        System.out.println("---------------------------------------------------");
         if (index == -1) {
             System.out.printf("task canceled!%n");
             return null;
@@ -416,6 +450,8 @@ public class StudentController {
                     "please choose what you want to modify for student courses : ");
 
             int choice =validChoice(4);
+            System.out.println("---------------------------------------------------");
+
             if (choice == 4) {
                 System.out.printf("task canceled!%n");
                 courseUpdate = 'n';
@@ -436,6 +472,7 @@ public class StudentController {
                 System.out.print("You want perform another course modify ? y or n : ");
                 courseUpdate = validResponse();
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -457,7 +494,7 @@ public class StudentController {
                         response = validResponse();
                     }
                     else {
-                        System.out.printf("sorry there is no courses to delete!%n");
+                        System.out.printf("there is no courses to delete!%n");
                         response = 'n';
                     }
                 }
@@ -466,6 +503,7 @@ public class StudentController {
                 System.out.printf("sorry there is no courses to delete!%n");
                 response = 'n';
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -473,6 +511,7 @@ public class StudentController {
         System.out.printf("All students : %n");
         for (int i = 0; i < students.size(); i++)
             System.out.printf("%d- %s %s%n", i + 1, students.get(i).getFirstName(), students.get(i).getLastName());
+        System.out.println("---------------------------------------------------");
     }
 
     public static void printStudentsFullDetails(ArrayList<Student> students) {
@@ -481,6 +520,7 @@ public class StudentController {
         for (Student student : students) {
             System.out.printf("%-10d%-20s%-20s%-20s%-8d%-20d%-2.2f%n", i++, student.getUserName(), student.getFirstName() + " " + student.getLastName(), student.getPhoneNumber(), student.getAge(), student.getCourses().size() , student.calculatePercentage());
         }
+        System.out.println("---------------------------------------------------");
     }
 
     private int validChoice(int max){
@@ -502,5 +542,4 @@ public class StudentController {
         }
         return response;
     }
-
 }

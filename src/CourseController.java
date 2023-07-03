@@ -40,7 +40,7 @@ public class CourseController {
         char addNew= 'y';
         while(addNew == 'y') {
             Scanner scanner = new Scanner(System.in);
-            System.out.printf("To add new course : %nEnter id: ");
+            System.out.printf("To add new course : %nEnter id or -1 to cancel : ");
             id = scanner.nextLine();
             while (coursesId.containsKey(id) && !id.equals("-1")) {
                 System.out.print("Sorry this id has been added before please enter another id or enter -1 to cancel : ");
@@ -79,6 +79,7 @@ public class CourseController {
                 System.out.print("You want to add another course ? y or n : ");
                 addNew = validResponse();
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -110,6 +111,7 @@ public class CourseController {
                 System.out.printf("there is no course left you can't perform any delete operation%n");
                 delete = 'n';
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -136,6 +138,8 @@ public class CourseController {
                                 "Please choose what you want to update : ");
 
                         int updateOp = validChoice(7);
+                        System.out.println("---------------------------------------------------");
+
                         if (updateOp == 7) {
                             System.out.printf("task canceled!%n");
                             sameCourse = 'n';
@@ -163,6 +167,7 @@ public class CourseController {
                             sameCourse = validResponse();
                         }
                     }
+                    System.out.println("---------------------------------------------------");
                     System.out.print("You want to update another course ? y or n : ");
                     update = validResponse();
                 }
@@ -171,6 +176,7 @@ public class CourseController {
                 System.out.printf("sorry there is no courses!%n");
                 update= 'n';
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -189,13 +195,14 @@ public class CourseController {
 
     public static Course selectCourse(ArrayList<Course> courses, Student student){
         printCoursesDetails(courses, student);
-        System.out.print("choose the course that you want or -1 to cancel :");
+        System.out.print("choose the course that you want or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
         int index = scanner.nextInt();
         while (index != -1 && index <= 0 || index > courses.size()) {
             System.out.print("please enter valid index : ");
             index = scanner.nextInt();
         }
+        System.out.println("---------------------------------------------------");
         if (index == -1) {
             System.out.printf("task canceled!%n");
             return null;
@@ -204,7 +211,7 @@ public class CourseController {
     }
 
     private void updateCourseId(Course course){
-        System.out.print("Enter the new id : ");
+        System.out.print("Enter the new id or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
         String newId = scanner.nextLine();
         while(coursesId.containsKey(newId) && !newId.equals("-1")){
@@ -217,68 +224,95 @@ public class CourseController {
             coursesId.put(newId, course);
             coursesId.remove(course.getId());
             course.setId(newId);
-            System.out.printf("course id updated%n");
+            System.out.printf("course id updated to %s%n", newId);
         }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateCourseName(Course course){
-        System.out.print("Enter the new name : ");
+        System.out.print("Enter the new name or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
         String newName = scanner.nextLine();
-        course.setName(newName);
-        System.out.printf("course name updated%n");
+        if (newName.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            course.setName(newName);
+            System.out.printf("course name updated to %s%n", newName);
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateCourseDescription(Course course){
-        System.out.print("Enter the new description : ");
+        System.out.print("Enter the new description or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
         String newDescription = scanner.nextLine();
-        course.setDescription(newDescription);
-        System.out.printf("course description updated%n");
+        if (newDescription.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            course.setDescription(newDescription);
+            System.out.printf("course description updated to %s%n", newDescription);
+        }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateCourseMaxDegree(Course course){
-        System.out.print("Enter the new max degree : ");
+        System.out.print("Enter the new max degree or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
         double newMaxDegree = scanner.nextDouble();
-        try {
-            course.setMaxDegree(newMaxDegree);
-            System.out.printf("max degree updated%n");
+        if (newMaxDegree == -1)
+            System.out.printf("task canceled!%n");
+        else {
+            try {
+                course.setMaxDegree(newMaxDegree);
+                System.out.printf("max degree updated to %.2f%n", newMaxDegree);
 
-        }catch (IllegalArgumentException e){
-            System.out.printf("can't update max degree! %s%n",e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.printf("can't update max degree! %s%n", e.getMessage());
+            }
         }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateCourseMinDegree(Course course){
-        System.out.print("Enter the new min degree : ");
+        System.out.print("Enter the new min degree or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
         double newMinDegree = scanner.nextDouble();
-        try {
-            course.setMinDegree(newMinDegree);
-            System.out.printf("min degree updated%n");
-        } catch (IllegalArgumentException e) {
-            System.out.printf("can't update min degree! %s%n",e.getMessage());
+        if (newMinDegree == -1)
+            System.out.printf("task canceled!%n");
+        else {
+            try {
+                course.setMinDegree(newMinDegree);
+                System.out.printf("min degree updated to %.2f%n", newMinDegree);
+            } catch (IllegalArgumentException e) {
+                System.out.printf("can't update min degree! %s%n", e.getMessage());
+            }
         }
+        System.out.println("---------------------------------------------------");
     }
 
     private void updateCourseSuccessDegree(Course course){
-        System.out.print("Enter the new success degree : ");
+        System.out.print("Enter the new success degree or -1 to cancel : ");
         Scanner scanner = new Scanner(System.in);
-        double input = scanner.nextDouble();
-        try {
-            course.setSuccessDegree(input);
-            System.out.printf("success degree updated%n");
+        double newSuccessGrade = scanner.nextDouble();
+        if (newSuccessGrade == -1)
+            System.out.printf("task canceled!%n");
+        else {
+            try {
+                course.setSuccessDegree(newSuccessGrade);
+                System.out.printf("success degree updated to %.2f%n", newSuccessGrade);
 
-        } catch (IllegalArgumentException e) {
-            System.out.printf("can't update success degree! %s%n",e.getMessage());
+            } catch (IllegalArgumentException e) {
+                System.out.printf("can't update success degree! %s%n", e.getMessage());
+            }
         }
+        System.out.println("---------------------------------------------------");
     }
 
     public static void printCoursesName(){
         System.out.printf("All courses : %n");
         for(int i= 0; i < courses.size(); i++)
             System.out.printf("%d- %s%n", i + 1, courses.get(i).getName());
+        System.out.println("---------------------------------------------------");
     }
 
     public static void printCoursesDetails(ArrayList<Course> courses, Student student){
@@ -293,6 +327,8 @@ public class CourseController {
 
             else
                 System.out.printf("%-10d%-15s%-25s%-20.2f%.2f %%%n", i++, course.getId(), course.getName(), student.getDegree(course), (student.getDegree(course)/course.getMaxDegree())*100 );
+
+        System.out.println("---------------------------------------------------");
     }
 
     private int validChoice(int max){

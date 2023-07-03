@@ -45,7 +45,8 @@ public class Main {
             System.out.print("Enter admin password : ");
             password = scanner.nextLine();
         }
-        System.out.printf("Congrats! You have been successfully logged in as an admin!%n");
+        System.out.printf("Congrats! You have been successfully logged in as admin!%n");
+        System.out.println("---------------------------------------------------");
         adminOperation();
     }
 
@@ -58,7 +59,7 @@ public class Main {
                 "Please choose : " );
 
         int choice = validChoice(4);
-
+        System.out.println("---------------------------------------------------");
         //Manage Students
         if (choice ==1)
             adminManageStudents();
@@ -86,6 +87,7 @@ public class Main {
                 "Please select what you want : ");
 
         int courseOp = validChoice(5);
+        System.out.println("---------------------------------------------------");
 
         if (courseOp == 5)
             adminOperation();
@@ -118,6 +120,7 @@ public class Main {
                 "Please select what you want : ");
 
         int studentOp = validChoice(6);
+        System.out.println("---------------------------------------------------");
 
         if (studentOp == 6)
             adminOperation();
@@ -163,6 +166,7 @@ public class Main {
             student1 = student.login(username, password);
         }
         System.out.printf("Congrats! You have been successfully logged in as %s %s!%n", student1.getFirstName(), student1.getLastName());
+        System.out.println("---------------------------------------------------");
         studentOperation(student1);
     }
 
@@ -174,6 +178,7 @@ public class Main {
                 "4- Exit Program%n" +
                 "Please choose : " );
         int choice = validChoice(4);
+        System.out.println("---------------------------------------------------");
 
         if (choice == 1)
             studentViewReports(student1);
@@ -195,12 +200,13 @@ public class Main {
         System.out.printf("Student reports :%n" +
                 "1- View all courses%n" +
                 "2- View all registered courses%n" +
-                "3- View all available courses%n" +
+                "3- View all available courses to register%n" +
                 "4- View full report%n" +
                 "5- Go back%n" +
                 "Please choose : ");
 
         int choice = validChoice(5);
+        System.out.println("---------------------------------------------------");
 
         if (choice == 5)
             studentOperation(student1);
@@ -236,6 +242,7 @@ public class Main {
                 "Please choose : " );
 
         int choice = validChoice(5);
+        System.out.println("---------------------------------------------------");
 
         if (choice == 5)
             studentOperation(student1);

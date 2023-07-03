@@ -106,6 +106,7 @@ public class Student {
             for (Map.Entry<Course, Double> it : courses.entrySet()) {
                 System.out.printf("%-10d%-15s%-30s%-20.2f%.2f %%%n", i++, it.getKey().getId(), it.getKey().getName(), it.getValue(), (it.getValue()/it.getKey().getMaxDegree())*100);
             }
+            System.out.println("---------------------------------------------------");
         }
     }
 
@@ -113,6 +114,6 @@ public class Student {
         System.out.printf("Student username : %s%nStudent name : %s %s%nPhone number : %s%nAge : %d%n", getUserName(), getFirstName(), getLastName(), getPhoneNumber(), getAge());
         printStudentCourses();
         if (courses.size() > 0) System.out.printf("Student Percentage = %.2f %%%n", calculatePercentage());
-        System.out.println("------------------------------------------");
+        System.out.println("---------------------------------------------------");
     }
 }
