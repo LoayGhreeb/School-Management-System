@@ -83,13 +83,14 @@ public class Main {
                 "2- Delete a course%n" +
                 "3- Modify a course%n" +
                 "4- View all courses report%n" +
-                "5- Go back%n" +
+                "5- View students registered in a specific course%n" +
+                "6- Go back%n" +
                 "Please select what you want : ");
 
-        int courseOp = validChoice(5);
+        int courseOp = validChoice(6);
         System.out.println("---------------------------------------------------");
 
-        if (courseOp == 5)
+        if (courseOp == 6)
             adminOperation();
 
         else {
@@ -102,8 +103,11 @@ public class Main {
             else if (courseOp == 3)
                 course.modifyCourse();
 
-            if (courseOp == 4)
+            else if (courseOp == 4)
                 CourseController.printCoursesDetails(CourseController.getCourses(), null);
+
+            else if (courseOp == 5)
+                course.viewStudentsRegisteredInCourse();
 
             adminManageCourses();
         }

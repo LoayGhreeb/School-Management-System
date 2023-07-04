@@ -89,6 +89,18 @@ public class Course {
         }
     }
 
+    public void viewStudents() {
+        if (students.size() > 0) {
+            System.out.printf("Students registered in %s : %n", getName());
+            System.out.printf("%-10s%-25s%-25s%-20s%-20s%n", "Index", "Student Username", "Student Name", "Student Degree", "Student Grade");
+            int index = 1;
+            for (Student student : students)
+                System.out.printf("%-10d%-25s%-30s%-20.2f%.2f%%%n", index++, student.getUserName(), student.getFirstName() + " " + student.getLastName(), student.getDegree(this), (student.getDegree(this) / getMaxDegree()) * 100);
+        }
+        else
+            System.out.printf("sorry there is no courses!%n");
+        System.out.println("---------------------------------------------------");
+    }
     public void printReport(){
         System.out.printf("Course Id : %s%nCourse name : %s%nCourse description: %s%nMax degree : %.2f%nMin degree : %.2f%nSuccess degree: %.2f%n", getId(), getName(), getDescription(), getMaxDegree(), getMinDegree(), getSuccessDegree());
         System.out.println("---------------------------------------------------");

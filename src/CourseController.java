@@ -193,6 +193,26 @@ public class CourseController {
         }
     }
 
+    public void viewStudentsRegisteredInCourse(){
+        char view = 'y';
+        while (view == 'y') {
+            if (courses.size() > 0) {
+                Course selectedCourse = selectCourse(courses, null);
+                if (selectedCourse == null)
+                    view= 'n';
+                else {
+                    selectedCourse.viewStudents();
+                    System.out.print("you want to view students for another course ? y or n : ");
+                    view = validResponse();
+                }
+            }
+            else{
+                System.out.printf("sorry there is no courses!%n");
+                view = 'n';
+            }
+            System.out.println("---------------------------------------------------");
+        }
+    }
     public static Course selectCourse(ArrayList<Course> courses, Student student){
         printCoursesDetails(courses, student);
         System.out.print("choose the course that you want or -1 to cancel : ");
