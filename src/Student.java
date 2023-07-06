@@ -1,6 +1,4 @@
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class Student {
 
@@ -21,7 +19,7 @@ public class Student {
         this.lastName = lastName;
         this.phoneNumber= phoneNumber;
         this.age = age;
-        this.enrolledCourses = new HashMap<>();
+        enrolledCourses = new HashMap<>();
     }
 
     public String getUserName() {
@@ -29,6 +27,27 @@ public class Student {
     }
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+    public void updateStudentUserName() {
+        Scanner scanner = new Scanner(System.in);
+        HashSet<String> userNames = StudentController.getUserNames();
+        System.out.print("Enter the new username or -1 to cancel : ");
+        String newUserName = scanner.nextLine();
+
+        while (!newUserName.equals("-1") && userNames.contains(newUserName.toLowerCase())) {
+            System.out.print("Sorry this username is already taken! try again or -1 to cancel : ");
+            newUserName = scanner.nextLine();
+        }
+
+        if (newUserName.equals("-1"))
+            System.out.printf("task canceled!%n");
+
+        else {
+            userNames.remove(getUserName().toLowerCase());
+            setUserName(newUserName);
+            userNames.add(newUserName.toLowerCase());
+            System.out.printf("username updated to %s%n", newUserName);
+        }
     }
 
     public String getPassword() {
@@ -47,7 +66,6 @@ public class Student {
             setPassword(newPassword);
             System.out.printf("password updated%n");
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public int getLevel(){
@@ -73,7 +91,6 @@ public class Student {
             setLevel(newLevel);
             System.out.printf("student level updated to %d%n", newLevel);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public String getFirstName() {
@@ -92,7 +109,6 @@ public class Student {
             setFirstName(newFirstName);
             System.out.printf("first name updated to %s%n", newFirstName);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public String getLastName() {
@@ -111,7 +127,6 @@ public class Student {
             setLastName(newLastName);
             System.out.printf("last name updated to %s%n", newLastName);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public String getPhoneNumber() {
@@ -130,7 +145,6 @@ public class Student {
             setPhoneNumber(newPhoneNumber);
             System.out.printf("phone number updated to %s%n", newPhoneNumber);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public int getAge() {
@@ -152,33 +166,165 @@ public class Student {
             setAge(newAge);
             System.out.printf("age updated to %d%n", newAge);
         }
+    }
+
+    public void modifyStudent() {
+        //select update operation
+        System.out.printf("Student update Operations : %n" +
+                "1- Update student username%n" +
+                "2- Update student password%n" +
+                "3- Update student level%n" +
+                "4- Update student first name%n" +
+                "5- Update student last name %n" +
+                "6- Update student phone Number%n" +
+                "7- Update student age%n" +
+                "8- Update student courses%n" +
+                "9- Go back%n" +
+                "Please choose what you want to update : ");
+
+        int choice = Main.validChoice(9);
         System.out.println("---------------------------------------------------");
-    }
 
-    public HashMap<Course , Double> getEnrolledCourses() {
-        return enrolledCourses;
-    }
+        // go back
+        if (choice == 9)
+            Main.adminManageStudents();
 
+        else {
+            if (choice == 1)
+                updateStudentUserName();
+
+            else if (choice == 2)
+                updatePassword();
+
+            else if (choice == 3)
+                updateLeve();
+
+            else if (choice == 4)
+                updateFirstName();
+
+            else if (choice == 5)
+                updateLastName();
+
+            else if (choice == 6)
+                updatePhone();
+
+            else if (choice == 7)
+                updateAge();
+
+            else
+                studentCourseUpdate();
+
+            System.out.println("---------------------------------------------------");
+            modifyStudent();
+        }
+
+    }
+    public ArrayList<Course> getEnrolledCourses() {
+        return new ArrayList<>(enrolledCourses.keySet());
+    }
     public void setEnrolledCourses(HashMap<Course ,Double> enrolledCourses){
         this.enrolledCourses = enrolledCourses;
+    }
+    public ArrayList<Course> getAvailableCourses() {
+        ArrayList<Course> availableCourses = new ArrayList<>(CourseController.getCourses());
+        availableCourses.removeIf(course -> course.getLevel() != getLevel());
+        availableCourses.removeAll(getEnrolledCourses());
+        if (availableCourses.size() > 0)
+            return availableCourses;
+        else {
+            System.out.printf("there are no available courses for this student%n");
+            return null;
+        }
+    }
+    public void studentCourseUpdate() {
+        //select course update operation
+        System.out.printf("Student course update operations : %n" +
+                "1- Enroll in a course%n" +
+                "2- Withdraw from a course%n" +
+                "3- Update student's degree in a specific course%n" +
+                "4- Go back%n" +
+                "please choose what you want to modify for student courses : ");
+
+        int choice = Main.validChoice(4);
+        System.out.println("---------------------------------------------------");
+
+        if (choice == 4)
+            modifyStudent();
+
+        else {
+            //Enroll in a course
+            if (choice == 1)
+                enrollInCourse(CourseController.selectCourse(getAvailableCourses(), null), true);
+
+            //Withdraw form a course
+            else if (choice == 2)
+                withdrawFromCourse(CourseController.selectCourse(getEnrolledCourses(), this), true);
+
+            //Update course degree
+            else if (choice == 3)
+                updateCourseDegree(CourseController.selectCourse(getEnrolledCourses(), this));
+
+            System.out.println("---------------------------------------------------");
+            studentCourseUpdate();
+        }
+    }
+    public void enrollInCourse(Course course, boolean admin) {
+        if (course != null) {
+            double degree = 0;
+            if (admin) {
+                System.out.print("please enter student degree in this course or -1 to cancel : ");
+                degree = Main.getValidDouble();
+                while (degree != -1 && (degree < course.getMinDegree() || degree > course.getMaxDegree())) {
+                    System.out.print("sorry, student degree must be in range [min degree, max degree] enter valid degree or -1 to cancel : ");
+                    degree = Main.getValidDouble();
+                }
+            }
+            if (degree == -1)
+                System.out.printf("task canceled!%n");
+            else {
+                enrolledCourses.put(course, degree);
+                course.enrollStudentInCourse(this);
+                System.out.printf("Student enrolled!%n");
+            }
+        }
+    }
+    public void withdrawFromCourse(Course course, boolean flag){
+        if (course != null) {
+            enrolledCourses.remove(course);
+            course.withdrawStudent(this);
+            if (flag)  System.out.printf("course withdrawn!%n");
+        }
+    }
+    public void withdrawFromAllCourses(){
+        for(Course course : enrolledCourses.keySet()){
+            course.withdrawStudent(this);
+            enrolledCourses.remove(course);
+        }
     }
 
     public double getDegree(Course course){
         return enrolledCourses.get(course);
     }
-
     public void setDegree(Course course, double degree){
         enrolledCourses.put(course, degree);
     }
+    public void updateCourseDegree(Course course) {
+        if (course != null) {
+            System.out.print("Enter new degree or -1 to cancel : ");
+            double newDegree = Main.getValidDouble();
+            while (newDegree != -1 && newDegree < course.getMinDegree() || newDegree > course.getMaxDegree()) {
+                System.out.print("sorry, student degree must be in range [min degree, max degree] enter valid degree or -1 to cancel : ");
+                newDegree = Main.getValidInteger();
+            }
+            if (newDegree == -1)
+                System.out.printf("task canceled!%n");
+            else {
+                setDegree(course, newDegree);
+                System.out.printf("Student degree updated to %.2f%n", newDegree);
+            }
+        }
+    }
 
-    public void withdrawFromCourse(Course course){
-        course.withdrawStudent(this);
-        enrolledCourses.remove(course);
-    }
-    public void withdrawFromAllCourses(){
-        for(Course course : enrolledCourses.keySet())
-            withdrawFromCourse(course);
-    }
     public double calculatePercentage(){
         double percentage= 0;
         for(Map.Entry<Course ,Double> it: enrolledCourses.entrySet())
@@ -187,24 +333,21 @@ public class Student {
         return (percentage/ enrolledCourses.size());
     }
 
-    public void printStudentCourses() {
-        int i =1;
-        if (enrolledCourses.size() > 0) {
-            System.out.printf("Student Courses: %n");
-            System.out.printf("%-10s%-15s%-30s%-15s%-20s%-20s%n", "Index", "Course Id", "Course Name", "Course Level", "Student Degree", "Student Grade");
-            for (Map.Entry<Course, Double> it : enrolledCourses.entrySet()) {
-                System.out.printf("%-10d%-15s%-30s%-15d%-20.2f%.2f %%%n", i++, it.getKey().getId(), it.getKey().getName(), it.getKey().getLevel(), it.getValue(), (it.getValue()/it.getKey().getMaxDegree())*100);
-            }
+    public void printStudentCourses(ArrayList<Course> courses) {
+        if (courses != null && courses.size() > 0) {
+            System.out.printf("Student is enrolled in : %n");
+            System.out.printf("%-10s%-15s%-25s%-15s%-20s%-20s%n", "Index", "Course Id", "Course Name", "Course Level", "Student Degree", "Student Grade");
+            int i = 1;
+            for (Course course : courses)
+                System.out.printf("%-10d%-15s%-25s%-15d%-20.2f%.2f %%%n", i++, course.getId(), course.getName(), course.getLevel(), getDegree(course), (getDegree(course) / course.getMaxDegree()) * 100);
         }
         else
-            System.out.printf("Student didn't enroll in any course%n");
-        System.out.println("---------------------------------------------------");
+            System.out.printf("student didn't enroll in any course%n");
     }
 
     public void printReport(){
         System.out.printf("Student username : %s%nStudent Level : %d%nStudent name : %s %s%nPhone number : %s%nAge : %d%n", getUserName(), getLevel(), getFirstName(), getLastName(), getPhoneNumber(), getAge());
-        printStudentCourses();
-        if (enrolledCourses.size() > 0) System.out.printf("Student Percentage = %.2f %%%n", calculatePercentage());
-        System.out.println("---------------------------------------------------");
+        printStudentCourses(getEnrolledCourses());
+        if (enrolledCourses.size() > 0)  System.out.printf("Student Percentage = %.2f %%%n", calculatePercentage());
     }
 }

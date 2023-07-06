@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class Course {
@@ -32,6 +33,24 @@ public class Course {
     public void setId(String id) {
         this.id = id;
     }
+    public void updateCourseId(){
+        HashMap<String ,Course> coursesId = CourseController.getCoursesId();
+        System.out.print("Enter the new id or -1 to cancel : ");
+        Scanner scanner = new Scanner(System.in);
+        String newId = scanner.nextLine();
+        while(coursesId.containsKey(newId) && !newId.equals("-1")){
+            System.out.print("Sorry this id has been added before please enter another id or enter -1 to cancel : ");
+            newId= scanner.nextLine();
+        }
+        if (newId.equals("-1"))
+            System.out.printf("task canceled!%n");
+        else {
+            coursesId.put(newId, this);
+            coursesId.remove(getId());
+            setId(newId);
+            System.out.printf("course id updated to %s%n", newId);
+        }
+    }
 
     public String getName() {
         return name;
@@ -49,7 +68,6 @@ public class Course {
             setName(newName);
             System.out.printf("course name updated to %s%n", newName);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public String getDescription() {
@@ -68,7 +86,6 @@ public class Course {
             setDescription(newDescription);
             System.out.printf("course description updated to %s%n", newDescription);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public double getMaxDegree() {
@@ -90,7 +107,6 @@ public class Course {
             setMaxDegree(newMaxDegree);
             System.out.printf("max degree updated to %.2f%n", newMaxDegree);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public double getMinDegree() {
@@ -112,7 +128,6 @@ public class Course {
             setMinDegree(newMinDegree);
             System.out.printf("min degree updated to %.2f%n", newMinDegree);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public double getSuccessDegree() {
@@ -134,7 +149,6 @@ public class Course {
             setSuccessDegree(newSuccessDegree);
             System.out.printf("success degree degree updated to %.2f%n", newSuccessDegree);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public int getLevel(){
@@ -158,43 +172,73 @@ public class Course {
             setLevel(newLevel);
             System.out.printf("course level updated to %d%n", newLevel);
         }
-        System.out.println("---------------------------------------------------");
     }
 
     public int getNumberOfStudents(){
         return enrolledStudents.size();
     }
 
-    public void enrollStudentToCourse(Student student){
-        enrolledStudents.add(student);
+    public void modifyCourse() {
+        System.out.printf("Course update operations : %n" +
+                "1- Update course id%n" +
+                "2- Update course name%n" +
+                "3- Update course description %n" +
+                "4- Update course max degree%n" +
+                "5- Update course min degree%n" +
+                "6- Update course success degree%n" +
+                "7- Update course level%n" +
+                "8- Go back%n" +
+                "Please choose what you want to update : ");
+
+        int updateOp = Main.validChoice(8);
+        System.out.println("---------------------------------------------------");
+
+        if (updateOp == 8)
+            Main.adminManageCourses();
+
+        else {
+            if (updateOp == 1)
+                updateCourseId();
+
+            else if (updateOp == 2)
+                updateName();
+
+            else if (updateOp == 3)
+                updateDescription();
+
+            else if (updateOp == 4)
+                updateMaxDegree();
+
+            else if (updateOp == 5)
+                updateMinDegree();
+
+            else if (updateOp == 6)
+                updateSuccessDegree();
+
+            else
+                updateLevel();
+
+            System.out.println("---------------------------------------------------");
+            modifyCourse();
+        }
     }
 
+    public void enrollStudentInCourse(Student student){
+        enrolledStudents.add(student);
+    }
     public void withdrawStudent(Student student){
         enrolledStudents.remove(student);
     }
-
     public void withdrawAllStudentsFromCourse(){
-        for(Student student : enrolledStudents){
-            student.withdrawFromCourse(this);
-            enrolledStudents.remove(student);
-        }
+        while (enrolledStudents.size() > 0)
+            enrolledStudents.get(0).withdrawFromCourse(this, false);
     }
-
     public void viewEnrolledStudents() {
         if (enrolledStudents.size() > 0) {
             System.out.printf("Students enrolled in %s course : %n", getName());
-            System.out.printf("%-10s%-25s%-20s%-20s%-20s%-20s%n", "Index", "Student Username", "Student Name", "Student Level", "Student Degree", "Student Grade");
-            int index = 1;
-            for (Student student : enrolledStudents)
-                System.out.printf("%-10d%-25s%-20s%-20d%-20.2f%.2f%%%n", index++, student.getUserName(), student.getFirstName() + " " + student.getLastName(), student.getLevel(), student.getDegree(this), (student.getDegree(this) / getMaxDegree()) * 100);
+            StudentController.printStudentsDetails(enrolledStudents);
         }
         else
-            System.out.printf("There are no students enrolled for this course!%n");
-        System.out.println("---------------------------------------------------");
-    }
-
-    public void printReport(){
-        System.out.printf("Course Id : %s%nCourse Level : %d%nCourse name : %s%nCourse description: %s%nMax degree : %.2f%nMin degree : %.2f%nSuccess degree: %.2f%n", getId(), getLevel(), getName(), getDescription(), getMaxDegree(), getMinDegree(), getSuccessDegree());
-        System.out.println("---------------------------------------------------");
+            System.out.printf("There are no students enrolled in this course!%n");
     }
 }
