@@ -4,12 +4,15 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class CourseController {
+public final class CourseController {
 
     private static final ArrayList<Course> courses = new ArrayList<>();
     private static final HashMap<String,Course> coursesId = new HashMap<>();
 
-    public CourseController(){
+    private CourseController(){
+    }
+
+    public static void readData(){
         File file = new File("./src/Courses.txt");
         try {
             Scanner scanner= new Scanner(file);
@@ -133,7 +136,7 @@ public class CourseController {
             System.out.printf("There is no any course!%n");
     }
 
-    public void storeData(){
+    public static void storeData(){
         try {
             FileWriter fileWriter = new FileWriter("./src/Courses.txt");
             for(Course course : courses){

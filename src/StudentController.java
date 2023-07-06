@@ -4,11 +4,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class StudentController {
+public final class StudentController {
     private static final ArrayList<Student> students = new ArrayList<>();
     private static final HashSet<String> userNames = new HashSet<>();
 
-    public StudentController() {
+    private StudentController() {}
+
+    public static void readData(){
         File file = new File("./src/Students.txt");
         try {
             Scanner scanner = new Scanner(file);
@@ -36,7 +38,6 @@ public class StudentController {
             System.out.println("File Not Found");
         }
     }
-
     public static ArrayList<Student> getStudents() {
         return students;
     }
@@ -44,7 +45,7 @@ public class StudentController {
         return userNames;
     }
 
-    public Student login(String userName, String password) {
+    public static Student login(String userName, String password) {
         for (Student student : students) {
             if (student.getUserName().equalsIgnoreCase(userName) && student.getPassword().equals(password))
                 return student;
@@ -52,7 +53,7 @@ public class StudentController {
         return null;
     }
 
-    public void addStudent() {
+    public static void addStudent() {
         String firstName, lastName, phoneNumber, userName, password;
         int age, level;
         Scanner scanner = new Scanner(System.in);
@@ -99,7 +100,7 @@ public class StudentController {
         }
     }
 
-    public void deleteStudent(Student student) {
+    public static void deleteStudent(Student student) {
         if (student != null) {
             student.withdrawFromAllCourses();
             userNames.remove(student.getUserName());
@@ -141,7 +142,7 @@ public class StudentController {
             System.out.printf("There is no any student!%n");
     }
 
-    public void storeDate() {
+    public static void storeDate() {
         try {
             FileWriter fileWriter = new FileWriter("./src/Students.txt");
             for (Student student : students) {

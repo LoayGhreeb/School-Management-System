@@ -2,11 +2,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main {
-
-    public static CourseController course= new CourseController();
-    public static StudentController student = new StudentController();
-
     public static void main(String[] args) {
+        CourseController.readData();
+        StudentController.readData();
         System.out.printf("Welcome! %n");
         printMainMenu();
     }
@@ -146,11 +144,11 @@ public class Main {
         else {
             //Add new student
             if (studentOp == 1)
-                student.addStudent();
+                StudentController.addStudent();
 
             //delete student
             else if (studentOp == 2)
-                student.deleteStudent(StudentController.selectStudent(StudentController.getStudents()));
+                StudentController.deleteStudent(StudentController.selectStudent(StudentController.getStudents()));
 
             //modify student
             else if (studentOp == 3) {
@@ -179,7 +177,7 @@ public class Main {
         String username = scanner.nextLine();
         System.out.print("Enter student password : ");
         String password = scanner.nextLine();
-        Student student1 = student.login(username, password);
+        Student student1 = StudentController.login(username, password);
         char response = 'y';
         while (response=='y' && student1 == null){
             System.out.print("wrong username or password! do you want to try again ? y or n : ");
@@ -189,7 +187,7 @@ public class Main {
                 username = scanner.nextLine();
                 System.out.print("Enter student password : ");
                 password = scanner.nextLine();
-                student1 = student.login(username, password);
+                student1 = StudentController.login(username, password);
             }
         }
         System.out.println("---------------------------------------------------");
@@ -348,8 +346,8 @@ public class Main {
     }
     public static void exitProgram(){
         System.out.printf("Thank you & come again! :D%n");
-        course.storeData();
-        student.storeDate();
+        CourseController.storeData();
+        StudentController.storeDate();
         System.out.print("new data saved!");
         System.exit(0);
     }
