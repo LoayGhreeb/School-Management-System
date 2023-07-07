@@ -5,7 +5,7 @@ import java.util.Scanner;
 public class Course {
     private String id, name, description;
     private double maxDegree, minDegree, successDegree;
-    int level;
+    private int level;
     private final ArrayList<Student> enrolledStudents= new ArrayList<>();
 
     public Course(String id, int level, String name, String description, double maxDegree, double minDegree, double successDegree) {
@@ -193,34 +193,32 @@ public class Course {
         int updateOp = Main.validChoice(8);
         System.out.println("---------------------------------------------------");
 
-        if (updateOp == 8)
-            Main.adminManageCourses();
+        if (updateOp == 1)
+            updateCourseId();
 
-        else {
-            if (updateOp == 1)
-                updateCourseId();
+        else if (updateOp == 2)
+            updateName();
 
-            else if (updateOp == 2)
-                updateName();
+        else if (updateOp == 3)
+            updateDescription();
 
-            else if (updateOp == 3)
-                updateDescription();
+        else if (updateOp == 4)
+            updateMaxDegree();
 
-            else if (updateOp == 4)
-                updateMaxDegree();
+        else if (updateOp == 5)
+            updateMinDegree();
 
-            else if (updateOp == 5)
-                updateMinDegree();
+        else if (updateOp == 6)
+            updateSuccessDegree();
 
-            else if (updateOp == 6)
-                updateSuccessDegree();
+        else if (updateOp == 7)
+            updateLevel();
 
-            else
-                updateLevel();
+        else if (updateOp == 8)
+            return;
 
-            System.out.println("---------------------------------------------------");
-            modifyCourse();
-        }
+        System.out.println("---------------------------------------------------");
+        modifyCourse();
     }
 
     public void enrollStudentInCourse(Student student){

@@ -7,6 +7,7 @@ public class Main {
         StudentController.readData();
         System.out.printf("Welcome! %n");
         printMainMenu();
+        exitProgram();
     }
 
     public static void printMainMenu(){
@@ -28,7 +29,9 @@ public class Main {
 
         //Sava data & exit
         else
-            exitProgram();
+            return;
+
+        printMainMenu();
     }
 
     public static void adminLogin(){
@@ -54,8 +57,6 @@ public class Main {
             System.out.println("---------------------------------------------------");
             adminOperation();
         }
-        else
-            printMainMenu();
     }
 
     public static void adminOperation(){
@@ -78,11 +79,13 @@ public class Main {
 
         //Logout
         else if (choice == 3)
-            printMainMenu();
+            return;
 
         //Save data & exit
         else if (choice ==4)
             exitProgram();
+
+        adminOperation();
     }
 
     public static void adminManageCourses(){
@@ -98,31 +101,30 @@ public class Main {
         int courseOp = validChoice(6);
         System.out.println("---------------------------------------------------");
 
-        if (courseOp == 6)
-            adminOperation();
+        if (courseOp == 1)
+            CourseController.addCourse();
 
-        else {
-            if (courseOp == 1)
-                CourseController.addCourse();
+        else if (courseOp == 2)
+            CourseController.deleteCourse(CourseController.selectCourse(CourseController.getCourses(), null));
 
-            else if (courseOp == 2)
-                CourseController.deleteCourse(CourseController.selectCourse(CourseController.getCourses(), null));
-
-            else if (courseOp == 3) {
-                Course selectedCourse= CourseController.selectCourse(CourseController.getCourses(), null);
-                if (selectedCourse != null) selectedCourse.modifyCourse();
-            }
-
-            else if (courseOp == 4)
-                CourseController.printCoursesDetails(CourseController.getCourses());
-
-            else if (courseOp == 5) {
-                Course selectedCourse = CourseController.selectCourse(CourseController.getCourses(), null);
-                if (selectedCourse != null) selectedCourse.viewEnrolledStudents();
-            }
-            System.out.println("---------------------------------------------------");
-            adminManageCourses();
+        else if (courseOp == 3) {
+            Course selectedCourse= CourseController.selectCourse(CourseController.getCourses(), null);
+            if (selectedCourse != null) selectedCourse.modifyCourse();
         }
+
+        else if (courseOp == 4)
+            CourseController.printCoursesDetails(CourseController.getCourses());
+
+        else if (courseOp == 5) {
+            Course selectedCourse = CourseController.selectCourse(CourseController.getCourses(), null);
+            if (selectedCourse != null) selectedCourse.viewEnrolledStudents();
+        }
+
+        else if (courseOp == 6)
+            return;
+
+        System.out.println("---------------------------------------------------");
+        adminManageCourses();
     }
 
     public static void adminManageStudents(){
@@ -138,40 +140,43 @@ public class Main {
         int studentOp = validChoice(6);
         System.out.println("---------------------------------------------------");
 
-        if (studentOp == 6)
-            adminOperation();
+        //Add new student
+        if (studentOp == 1)
+            StudentController.addStudent();
 
-        else {
-            //Add new student
-            if (studentOp == 1)
-                StudentController.addStudent();
+        //delete student
+        else if (studentOp == 2)
+            StudentController.deleteStudent(StudentController.selectStudent(StudentController.getStudents()));
 
-            //delete student
-            else if (studentOp == 2)
-                StudentController.deleteStudent(StudentController.selectStudent(StudentController.getStudents()));
-
-            //modify student
-            else if (studentOp == 3) {
-                Student selectedStudent = StudentController.selectStudent(StudentController.getStudents());
-                if (selectedStudent != null)  selectedStudent.modifyStudent();
-            }
-
-            //all students
-            else if (studentOp == 4)
-                StudentController.printStudentsDetails(StudentController.getStudents());
-
-            //report for specific student
-            else if (studentOp == 5) {
-                Student selectedStudent = StudentController.selectStudent(StudentController.getStudents());
-                if (selectedStudent != null) selectedStudent.printReport();
-            }
-
-            System.out.println("---------------------------------------------------");
-            adminManageStudents();
+        //modify student
+        else if (studentOp == 3) {
+            Student selectedStudent = StudentController.selectStudent(StudentController.getStudents());
+            if (selectedStudent != null)  selectedStudent.modifyStudent();
         }
+
+        //all students
+        else if (studentOp == 4)
+            StudentController.printStudentsDetails(StudentController.getStudents());
+
+        //report for specific student
+        else if (studentOp == 5) {
+            Student selectedStudent = StudentController.selectStudent(StudentController.getStudents());
+            if (selectedStudent != null) selectedStudent.printReport();
+        }
+
+        else if (studentOp == 6)
+           return;
+
+        System.out.println("---------------------------------------------------");
+        adminManageStudents();
     }
 
     public  static void studentLogin(){
+        if (StudentController.getStudents().size() == 0){
+            System.out.printf("There is no any student!%nYou must login as admin first, add students.%n");
+            System.out.println("---------------------------------------------------");
+            return;
+        }
         Scanner scanner = new Scanner(System.in);
         System.out.print("Enter student username : ");
         String username = scanner.nextLine();
@@ -196,8 +201,6 @@ public class Main {
             System.out.println("---------------------------------------------------");
             studentOperation(student1);
         }
-        else
-            printMainMenu();
     }
 
     public static void studentOperation(Student student1){
@@ -218,12 +221,13 @@ public class Main {
 
         //Logout
         else if(choice == 3)
-            printMainMenu();
+           return;
 
         //Exit & save data
         else if (choice == 4)
             exitProgram();
 
+        studentOperation(student1);
     }
 
     public static void studentViewReports(Student student1){
@@ -237,26 +241,26 @@ public class Main {
         int choice = validChoice(4);
         System.out.println("---------------------------------------------------");
 
-        if (choice == 4)
-            studentOperation(student1);
-        else{
-            //View all registered courses
-             if (choice == 1)
-                student1.printStudentCourses(student1.getEnrolledCourses());
 
-            //View all available courses
-            else if (choice == 2) {
-                 ArrayList<Course> available = student1.getAvailableCourses();
-                 if (available != null)
-                     CourseController.printCoursesDetails(available);
-             }
-            //View Full Report
-            else if (choice == 3)
-                student1.printReport();
+        //View all registered courses
+         if (choice == 1)
+            student1.printStudentCourses(student1.getEnrolledCourses());
 
-            System.out.println("---------------------------------------------------");
-            studentViewReports(student1);
-        }
+        //View all available courses
+        else if (choice == 2) {
+             ArrayList<Course> available = student1.getAvailableCourses();
+             if (available != null)
+                 CourseController.printCoursesDetails(available);
+         }
+        //View Full Report
+        else if (choice == 3)
+            student1.printReport();
+
+        else if (choice == 4)
+             return;
+
+        System.out.println("---------------------------------------------------");
+        studentViewReports(student1);
     }
 
     public static void studentMangeHisData(Student student1){
@@ -270,31 +274,29 @@ public class Main {
 
         int choice = validChoice(5);
         System.out.println("---------------------------------------------------");
+        //change username
+        if (choice == 1)
+            student1.updateStudentUserName();
 
-        if (choice == 5)
-            studentOperation(student1);
-        else {
-            //change username
-            if (choice == 1)
-                student1.updateStudentUserName();
+        //change password
+        else if (choice ==2)
+            student1.updatePassword();
 
-            //change password
-            else if (choice ==2)
-                student1.updatePassword();
-
-            //Enroll in a course
-            else if (choice ==3) {
-                if (student1.getAvailableCourses() != null)
-                    student1.enrollInCourse( CourseController.selectCourse(student1.getAvailableCourses(), null), false);
-            }
-
-            //Withdraw from a course
-            else if(choice == 4)
-                student1.withdrawFromCourse(CourseController.selectCourse(student1.getEnrolledCourses(), student1), true);
-
-            System.out.println("---------------------------------------------------");
-            studentMangeHisData(student1);
+        //Enroll in a course
+        else if (choice ==3) {
+            if (student1.getAvailableCourses() != null)
+                student1.enrollInCourse( CourseController.selectCourse(student1.getAvailableCourses(), null), false);
         }
+
+        //Withdraw from a course
+        else if(choice == 4)
+            student1.withdrawFromCourse(CourseController.selectCourse(student1.getEnrolledCourses(), student1), true);
+
+        else if (choice == 5)
+            return;
+
+        System.out.println("---------------------------------------------------");
+        studentMangeHisData(student1);
     }
 
     public static int validChoice(int max) {

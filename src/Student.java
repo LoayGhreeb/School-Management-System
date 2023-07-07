@@ -185,39 +185,35 @@ public class Student {
         int choice = Main.validChoice(9);
         System.out.println("---------------------------------------------------");
 
-        // go back
-        if (choice == 9)
-            Main.adminManageStudents();
+        if (choice == 1)
+            updateStudentUserName();
 
-        else {
-            if (choice == 1)
-                updateStudentUserName();
+        else if (choice == 2)
+            updatePassword();
 
-            else if (choice == 2)
-                updatePassword();
+        else if (choice == 3)
+            updateLeve();
 
-            else if (choice == 3)
-                updateLeve();
+        else if (choice == 4)
+            updateFirstName();
 
-            else if (choice == 4)
-                updateFirstName();
+        else if (choice == 5)
+            updateLastName();
 
-            else if (choice == 5)
-                updateLastName();
+        else if (choice == 6)
+            updatePhone();
 
-            else if (choice == 6)
-                updatePhone();
+        else if (choice == 7)
+            updateAge();
 
-            else if (choice == 7)
-                updateAge();
+        else if (choice == 8)
+            studentCourseUpdate();
 
-            else
-                studentCourseUpdate();
+        else if (choice == 9)
+            return;
 
-            System.out.println("---------------------------------------------------");
-            modifyStudent();
-        }
-
+        System.out.println("---------------------------------------------------");
+        modifyStudent();
     }
     public ArrayList<Course> getEnrolledCourses() {
         return new ArrayList<>(enrolledCourses.keySet());
