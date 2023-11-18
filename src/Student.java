@@ -225,7 +225,7 @@ public class Student {
         ArrayList<Course> availableCourses = new ArrayList<>(CourseController.getCourses());
         availableCourses.removeIf(course -> course.getLevel() != getLevel());
         availableCourses.removeAll(getEnrolledCourses());
-        if (availableCourses.size() > 0)
+        if (!availableCourses.isEmpty())
             return availableCourses;
         else {
             System.out.printf("there are no available courses for this student%n");
@@ -245,7 +245,7 @@ public class Student {
         System.out.println("---------------------------------------------------");
 
         if (choice == 4)
-            modifyStudent();
+            return;
 
         else {
             //Enroll in a course
@@ -325,12 +325,12 @@ public class Student {
         double percentage= 0;
         for(Map.Entry<Course ,Double> it: enrolledCourses.entrySet())
             percentage += ( (it.getValue() / it.getKey().getMaxDegree()) * 100 );
-        if (enrolledCourses.size() == 0) return 0;
+        if (enrolledCourses.isEmpty()) return 0;
         return (percentage/ enrolledCourses.size());
     }
 
     public void printStudentCourses(ArrayList<Course> courses) {
-        if (courses != null && courses.size() > 0) {
+        if (courses != null && !courses.isEmpty()) {
             System.out.printf("Student is enrolled in : %n");
             System.out.printf("%-10s%-15s%-25s%-15s%-20s%-20s%n", "Index", "Course Id", "Course Name", "Course Level", "Student Degree", "Student Grade");
             int i = 1;
@@ -344,6 +344,6 @@ public class Student {
     public void printReport(){
         System.out.printf("Student username : %s%nStudent Level : %d%nStudent name : %s %s%nPhone number : %s%nAge : %d%n", getUserName(), getLevel(), getFirstName(), getLastName(), getPhoneNumber(), getAge());
         printStudentCourses(getEnrolledCourses());
-        if (enrolledCourses.size() > 0)  System.out.printf("Student Percentage = %.2f %%%n", calculatePercentage());
+        if (!enrolledCourses.isEmpty())  System.out.printf("Student Percentage = %.2f %%%n", calculatePercentage());
     }
 }

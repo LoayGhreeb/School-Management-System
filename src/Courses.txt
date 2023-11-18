@@ -1,6 +1,0 @@
-GN170,1,English Language-1,exploring creative reading and writing,100.0,0.0,60.0
-MA111,1,Mathematics-1,Linear equations inequalities functions and graphs,100.0,0.0,60.0
-OD111,2,Discrete Mathematics,Discrete math is a branch of mathematics that deals with objects that are discrete,100.0,0.0,60.0
-CS111,2,Computer Introduction,introduced to fundamental concepts in programming,100.0,0.0,60.0
-CS110,2,Semiconductors,understand the operation of semiconductor devices,100.0,0.0,60.0
-GN140,1,Professional Ethics,understand the importance of Values and Ethics in their Personal lives,100.0,0.0,60.0

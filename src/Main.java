@@ -3,6 +3,7 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        DatabaseHelper.initializeDB();
         CourseController.readData();
         StudentController.readData();
         System.out.printf("Welcome! %n");
@@ -172,7 +173,7 @@ public class Main {
     }
 
     public  static void studentLogin(){
-        if (StudentController.getStudents().size() == 0){
+        if (StudentController.getStudents().isEmpty()){
             System.out.printf("There is no any student!%nYou must login as admin first, add students.%n");
             System.out.println("---------------------------------------------------");
             return;

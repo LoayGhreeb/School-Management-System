@@ -7,7 +7,9 @@ public class Course {
     private double maxDegree, minDegree, successDegree;
     private int level;
     private final ArrayList<Student> enrolledStudents= new ArrayList<>();
+    public Course(){
 
+    }
     public Course(String id, int level, String name, String description, double maxDegree, double minDegree, double successDegree) {
         if (maxDegree < 0 || maxDegree < minDegree )
             throw new IllegalArgumentException("max degree must be in range [min degree , inf]");

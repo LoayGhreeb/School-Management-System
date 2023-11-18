@@ -1,7 +1,4 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.*;
 import java.util.*;
 
 public final class CourseController {
@@ -9,21 +6,23 @@ public final class CourseController {
     private static final ArrayList<Course> courses = new ArrayList<>();
     private static final HashMap<String,Course> coursesId = new HashMap<>();
 
-    private CourseController(){
-    }
-
-    public static void readData(){
-        File file = new File("./src/Courses.txt");
-        try {
-            Scanner scanner= new Scanner(file);
-            while (scanner.hasNextLine()){
-                String [] courseData = scanner.nextLine().split(",");
-                Course newCourse = new Course(courseData[0], Integer.parseInt(courseData[1]), courseData[2], courseData[3], Double.parseDouble(courseData[4]), Double.parseDouble(courseData[5]), Double.parseDouble(courseData[6]));
+    public static void readData() {
+        try{
+            ResultSet resultSet = DatabaseHelper.connection.createStatement().executeQuery("SELECT * FROM Courses");
+            while (resultSet.next()) {
+                Course newCourse = new Course();
+                newCourse.setId(resultSet.getString("course_id"));
+                newCourse.setLevel(resultSet.getInt("course_level"));
+                newCourse.setName(resultSet.getString("course_name"));
+                newCourse.setDescription(resultSet.getString("course_description"));
+                newCourse.setMaxDegree(resultSet.getDouble("max_degree"));
+                newCourse.setMinDegree(resultSet.getDouble("min_degree"));
+                newCourse.setSuccessDegree(resultSet.getDouble("success_degree"));
                 courses.add(newCourse);
                 coursesId.put(newCourse.getId(), newCourse);
             }
-        }catch (FileNotFoundException e){
-            System.out.printf("File Not Found!%n");
+        } catch (SQLException e) {
+            System.out.println("No suitable driver found for sqlite3");
         }
     }
 
@@ -106,7 +105,7 @@ public final class CourseController {
         if (student != null) student.printStudentCourses(student.getEnrolledCourses());
         else printCoursesDetails(courses);
         Course course = null;
-        if (courses != null && courses.size() > 0) {
+        if (courses != null && !courses.isEmpty()) {
             System.out.println("---------------------------------------------------");
             System.out.print("choose the course that you want or -1 to cancel : ");
             int index = Main.getValidInteger();
@@ -125,7 +124,7 @@ public final class CourseController {
     }
 
     public static void printCoursesDetails(ArrayList<Course> courses) {
-        if (courses != null && courses.size() > 0) {
+        if (courses != null && !courses.isEmpty()) {
             courses.sort(Comparator.comparingInt(Course::getLevel));
             System.out.printf("%-10s%-15s%-25s%-15s%-20s%-20s%-20s%-20s%n", "Index", "Course Id", "Course Name", "Course Level", "Min Degree", "Max Degree", "Success Degree", "Number Of Students");
             int i = 1;
@@ -138,13 +137,21 @@ public final class CourseController {
 
     public static void storeData(){
         try {
-            FileWriter fileWriter = new FileWriter("./src/Courses.txt");
+            //Delete all the courses that are currently stored in the database.
+            DatabaseHelper.connection.createStatement().executeUpdate("DELETE FROM Courses");
+            //Insert the updated courses
+            PreparedStatement preparedStatement = DatabaseHelper.connection.prepareStatement("INSERT INTO Courses values (? , ?, ?, ?, ?, ?, ?)");
             for(Course course : courses){
-                String courseData = String.format(course.getId()+ "," + course.getLevel() + "," + course.getName() + "," + course.getDescription() + "," + course.getMaxDegree() + "," + course.getMinDegree() + "," + course.getSuccessDegree() + "\n");
-                fileWriter.write(courseData);
+                preparedStatement.setString(1, course.getId());
+                preparedStatement.setInt(2, course.getLevel());
+                preparedStatement.setString(3, course.getName());
+                preparedStatement.setString(4, course.getDescription());
+                preparedStatement.setDouble(5, course.getMaxDegree());
+                preparedStatement.setDouble(6, course.getMinDegree());
+                preparedStatement.setDouble(7, course.getSuccessDegree());
+                preparedStatement.executeUpdate();
             }
-            fileWriter.close();
-        }catch (IOException e){
+        }catch (SQLException e){
             System.out.println(e.getMessage());
         }
     }

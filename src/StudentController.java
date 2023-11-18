@@ -22,7 +22,7 @@ public final class StudentController {
                 //Courses that student registered
                 HashMap<Course, Double> studentCourses = new HashMap<>();
                 String[] splitCourses = scanner.nextLine().split(",");
-                if (!splitCourses[0].equals("")) {
+                if (!splitCourses[0].isEmpty()) {
                     for (String course : splitCourses) {
                         String courseId = course.split(":")[0];
                         double degree = Double.parseDouble(course.split(":")[1]);
@@ -112,7 +112,7 @@ public final class StudentController {
     public static Student selectStudent(ArrayList<Student> students){
         printStudentsDetails(students);
         Student student = null;
-        if (students!= null && students.size() > 0) {
+        if (students!= null && !students.isEmpty()) {
             System.out.println("---------------------------------------------------");
             System.out.print("choose student that you want or -1 to cancel : ");
             int index = Main.getValidInteger();
@@ -131,7 +131,7 @@ public final class StudentController {
     }
 
     public static void printStudentsDetails(ArrayList<Student> students) {
-        if (students != null && students.size() > 0) {
+        if (students != null && !students.isEmpty()) {
             students.sort(Comparator.comparingInt(Student::getLevel));
             System.out.printf("%-10s%-20s%-20s%-20s%-20s%-8s%-20s%-20s%n", "Index", "Student username", "Student Name", "Student Level", "Phone Number", "Age", "Number of Courses", "Student Percentage");
             int i = 1;
