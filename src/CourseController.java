@@ -22,7 +22,7 @@ public final class CourseController {
                 coursesId.put(newCourse.getId(), newCourse);
             }
         } catch (SQLException e) {
-            System.out.println("No suitable driver found for sqlite3");
+            System.out.println(e.getMessage());
         }
     }
 
@@ -140,16 +140,16 @@ public final class CourseController {
             //Delete all the courses that are currently stored in the database.
             DatabaseHelper.connection.createStatement().executeUpdate("DELETE FROM Courses");
             //Insert the updated courses
-            PreparedStatement preparedStatement = DatabaseHelper.connection.prepareStatement("INSERT INTO Courses values (? , ?, ?, ?, ?, ?, ?)");
+            PreparedStatement courseInsert = DatabaseHelper.connection.prepareStatement("INSERT INTO Courses values (? , ?, ?, ?, ?, ?, ?)");
             for(Course course : courses){
-                preparedStatement.setString(1, course.getId());
-                preparedStatement.setInt(2, course.getLevel());
-                preparedStatement.setString(3, course.getName());
-                preparedStatement.setString(4, course.getDescription());
-                preparedStatement.setDouble(5, course.getMaxDegree());
-                preparedStatement.setDouble(6, course.getMinDegree());
-                preparedStatement.setDouble(7, course.getSuccessDegree());
-                preparedStatement.executeUpdate();
+                courseInsert.setString(1, course.getId());
+                courseInsert.setInt(2, course.getLevel());
+                courseInsert.setString(3, course.getName());
+                courseInsert.setString(4, course.getDescription());
+                courseInsert.setDouble(5, course.getMaxDegree());
+                courseInsert.setDouble(6, course.getMinDegree());
+                courseInsert.setDouble(7, course.getSuccessDegree());
+                courseInsert.executeUpdate();
             }
         }catch (SQLException e){
             System.out.println(e.getMessage());

@@ -1,7 +1,6 @@
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 
 public final class StudentController {
@@ -11,31 +10,34 @@ public final class StudentController {
     private StudentController() {}
 
     public static void readData(){
-        File file = new File("./src/Students.txt");
         try {
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                //Student data
-                String[] studentData = scanner.nextLine().split(",");
-                Student newStudent = new Student(studentData[0], studentData[1], Integer.parseInt(studentData[2]), studentData[3], studentData[4], studentData[5], Integer.parseInt(studentData[6]));
-                userNames.add(studentData[0].toLowerCase());
-                //Courses that student registered
+            ResultSet resultSet = DatabaseHelper.connection.createStatement().executeQuery("SELECT * FROM Students");
+            while (resultSet.next()) {
+                Student newStudent = new Student();
+                newStudent.setUserName(resultSet.getString("username"));
+                newStudent.setPassword(resultSet.getString("password"));
+                newStudent.setLevel(resultSet.getInt("level"));
+                newStudent.setFirstName(resultSet.getString("first_name"));
+                newStudent.setLastName(resultSet.getString("last_name"));
+                newStudent.setPhoneNumber(resultSet.getString("phone_number"));
+                newStudent.setAge(resultSet.getInt("age"));
+
+                userNames.add(newStudent.getUserName());
+
                 HashMap<Course, Double> studentCourses = new HashMap<>();
-                String[] splitCourses = scanner.nextLine().split(",");
-                if (!splitCourses[0].isEmpty()) {
-                    for (String course : splitCourses) {
-                        String courseId = course.split(":")[0];
-                        double degree = Double.parseDouble(course.split(":")[1]);
-                        Course course1 = CourseController.getCourseById(courseId);
-                        studentCourses.put(course1, degree);
-                        course1.enrollStudentInCourse(newStudent);
-                    }
+                ResultSet courses = DatabaseHelper.connection.createStatement().executeQuery("SELECT * FROM Student_Courses WHERE username = '" + newStudent.getUserName() + "'");
+                while (courses.next()) {
+                    String courseId = courses.getString("course_id");
+                    double degree = courses.getDouble("grade");
+                    Course course = CourseController.getCourseById(courseId);
+                    studentCourses.put(course, degree);
+                    course.enrollStudentInCourse(newStudent);
                 }
                 newStudent.setEnrolledCourses(studentCourses);
                 students.add(newStudent);
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File Not Found");
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
     }
     public static ArrayList<Student> getStudents() {
@@ -143,19 +145,33 @@ public final class StudentController {
     }
 
     public static void storeDate() {
-        try {
-            FileWriter fileWriter = new FileWriter("./src/Students.txt");
-            for (Student student : students) {
-                StringBuilder studentData = new StringBuilder(String.format(student.getUserName() + "," + student.getPassword() + "," + student.getLevel() + "," + student.getFirstName() + "," + student.getLastName() + "," + student.getPhoneNumber() + "," + student.getAge() + "\n"));
+        try{
+            //Delete all the students that are currently stored in the database.
+            DatabaseHelper.connection.createStatement().executeUpdate("DELETE FROM Student_Courses");
+            DatabaseHelper.connection.createStatement().executeUpdate("DELETE FROM Students");
+            //Insert new data
+            PreparedStatement studentInsert = DatabaseHelper.connection.prepareStatement("INSERT INTO Students values (? , ?, ?, ?, ?, ?, ?)");
+            for(Student student : students){
+                studentInsert.setString(1, student.getUserName());
+                studentInsert.setString(2, student.getPassword());
+                studentInsert.setInt(3, student.getLevel());
+                studentInsert.setString(4, student.getFirstName());
+                studentInsert.setString(5, student.getLastName());
+                studentInsert.setString(6, student.getPhoneNumber());
+                studentInsert.setInt(7, student.getAge());
+
+                studentInsert.executeUpdate();
                 ArrayList<Course> studentCourses = student.getEnrolledCourses();
-                for (Course course : studentCourses)
-                    studentData.append(String.format(course.getId() + ":" + student.getDegree(course)+ ","));
-                studentData.append("\n");
-                fileWriter.write(String.valueOf(studentData));
+                PreparedStatement studentCoursesInsert = DatabaseHelper.connection.prepareStatement("INSERT INTO Student_Courses values (?, ?, ?)");
+                for(Course course : studentCourses){
+                    studentCoursesInsert.setString(1, student.getUserName());
+                    studentCoursesInsert.setString(2, course.getId());
+                    studentCoursesInsert.setDouble(3, student.getDegree(course));
+                    studentCoursesInsert.executeUpdate();
+                }
             }
-            fileWriter.close();
-        } catch (IOException e) {
-            System.out.print(e.getMessage());
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
         }
     }
 }

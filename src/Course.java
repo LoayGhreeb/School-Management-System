@@ -230,11 +230,11 @@ public class Course {
         enrolledStudents.remove(student);
     }
     public void withdrawAllStudentsFromCourse(){
-        while (enrolledStudents.size() > 0)
+        while (!enrolledStudents.isEmpty())
             enrolledStudents.get(0).withdrawFromCourse(this, false);
     }
     public void viewEnrolledStudents() {
-        if (enrolledStudents.size() > 0) {
+        if (!enrolledStudents.isEmpty()) {
             System.out.printf("Students enrolled in %s course : %n", getName());
             StudentController.printStudentsDetails(enrolledStudents);
         }

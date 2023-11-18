@@ -352,6 +352,7 @@ public class Main {
         CourseController.storeData();
         StudentController.storeDate();
         System.out.print("new data saved!");
+        DatabaseHelper.close();
         System.exit(0);
     }
 }

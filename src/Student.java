@@ -7,6 +7,8 @@ public class Student {
     private int level, age;
     private HashMap<Course , Double> enrolledCourses;
 
+    public Student(){
+    }
     public Student(String userName, String password, int level, String firstName, String lastName, String phoneNumber, int age){
         if (level <= 0 || level > 4)
             throw new IllegalArgumentException("student level must be in range [1,4]");

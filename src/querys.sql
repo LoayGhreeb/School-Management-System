@@ -9,3 +9,23 @@ CREATE TABLE "Courses"(
     PRIMARY KEY ("course_id")
 );
 
+CREATE TABLE "Students"(
+    "username"  TEXT,
+    "password" TEXT NOT NULL,
+    "level" INTEGER NOT NULL,
+    "first_name" TEXT NOT NULL,
+    "last_name" TEXT NOT NULL,
+    "phone_number" TEXT NOT NULL,
+    "age" INTEGER NOT NULL,
+    check ("age" > 0),
+    check ("level" BETWEEN 1 AND 4),
+    PRIMARY KEY ("username")
+);
+
+CREATE TABLE "Student_Courses"(
+    "username" TEXT,
+    "course_id" TEXT,
+    "grade" INTEGER NOT NULL,
+    FOREIGN KEY("username") REFERENCES "Students"("username"),
+    FOREIGN KEY("course_id") REFERENCES "Courses"("course_id")
+);
